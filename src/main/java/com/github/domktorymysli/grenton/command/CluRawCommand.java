@@ -1,6 +1,6 @@
 package com.github.domktorymysli.grenton.command;
 
-final public class CluRawCommand extends CluCommandBase implements CluCommand {
+public final class CluRawCommand extends CluCommandBase implements CluCommand {
 
     private final String command;
 

@@ -3,9 +3,9 @@ package com.github.domktorymysli.grenton.command;
 import java.net.InetAddress;
 import java.util.Random;
 
-final public class CluFunctionCommand extends CluCommandBase implements CluCommand {
+public final class CluFunctionCommand extends CluCommandBase implements CluCommand {
 
-    private Random randomGenerator = new Random();
+    private static final Random randomGenerator = new Random();
 
     public CluFunctionCommand(InetAddress ip, String functionName, String[] args) {
 
@@ -21,13 +21,10 @@ final public class CluFunctionCommand extends CluCommandBase implements CluComma
     }
 
     private String generateRandomSessionId() {
+        final StringBuilder randomSessionId = new StringBuilder(Integer.toHexString(randomGenerator.nextInt(65534)));
 
-        String randomSessionId;
+        while(randomSessionId.length() < 6) randomSessionId.append('0');
 
-        for(randomSessionId = Integer.toHexString(randomGenerator.nextInt(65534)); randomSessionId.length() < 6; randomSessionId = "0" + randomSessionId) {
-
-        }
-
-        return randomSessionId;
+        return randomSessionId.toString();
     }
 }

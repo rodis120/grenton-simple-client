@@ -9,4 +9,6 @@ public interface Api {
 
     CluCommandResponse send(CluCommand command) throws GrentonIoException, GrentonEncoderException;
 
+    void close();
+
 }

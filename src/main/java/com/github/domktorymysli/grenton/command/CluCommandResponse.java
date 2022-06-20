@@ -5,7 +5,7 @@ import com.github.domktorymysli.grenton.cipher.model.MessageDecoded;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final public class CluCommandResponse extends CluCommandBase implements CluCommand {
+public final class CluCommandResponse extends CluCommandBase implements CluCommand {
 
     private final MessageDecoded messageDecoded;
 

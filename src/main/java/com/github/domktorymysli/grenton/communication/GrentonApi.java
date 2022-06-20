@@ -1,6 +1,5 @@
 package com.github.domktorymysli.grenton.communication;
 
-import com.github.domktorymysli.grenton.GrentonCli;
 import com.github.domktorymysli.grenton.cipher.api.Encoder;
 import com.github.domktorymysli.grenton.cipher.api.exception.GrentonEncoderException;
 import com.github.domktorymysli.grenton.cipher.model.MessageDecoded;
@@ -18,14 +17,14 @@ import java.net.InetAddress;
 
 public final class GrentonApi implements Api {
 
-    private final static Logger logger = Logger.getLogger(GrentonCli.class);
+    private static final Logger logger = Logger.getLogger(GrentonApi.class);
 
     private final Clu clu;
     private final Encoder encoder;
     private final DatagramSocket socket;
 
-    private int timeout = 2000;
-    private int bufforLenght = 2048;
+    private static final int TIMEOUT = 2000;
+    private static final int BUFFER_LENGTH = 2048;
 
     public GrentonApi(Clu clu, Encoder encoder, DatagramSocket socket) {
         this.clu = clu;
@@ -38,19 +37,18 @@ public final class GrentonApi implements Api {
         try {
             MessageEncoded messageEncoded = encoder.encode(new MessageDecoded(command.getCommand()));
             byte[] message = messageEncoded.getMsg();
-            InetAddress address = this.clu.getIp();
-            int port = this.clu.getPort();
+            InetAddress address = clu.getIp();
+            int port = clu.getPort();
 
             DatagramPacket datagramPacket = new DatagramPacket(message, message.length, address, port);
-            DatagramPacket response = new DatagramPacket(new byte[this.bufforLenght], this.bufforLenght);
+            DatagramPacket response = new DatagramPacket(new byte[BUFFER_LENGTH], BUFFER_LENGTH);
 
-            logger.info("Sending command: " + command.getCommand() + " to " + this.clu.getIp().getHostName());
+            logger.info("Sending command: " + command.getCommand() + " to " + clu.getIp().getHostName());
             long startTime = System.currentTimeMillis();
 
-            this.socket.setSoTimeout(this.timeout);
-            this.socket.send(datagramPacket);
-            this.socket.receive(response);
-            this.socket.close();
+            socket.setSoTimeout(TIMEOUT);
+            socket.send(datagramPacket);
+            socket.receive(response);
             long estimatedTime = System.currentTimeMillis() - startTime;
 
             MessageDecoded messageDecoded = encoder.decode(new MessageEncoded(response.getData(), response.getLength()));
@@ -66,6 +64,10 @@ public final class GrentonApi implements Api {
 
             throw new GrentonIoException(e);
         }
+    }
+
+    public void close() {
+        socket.close();
     }
 }
 
