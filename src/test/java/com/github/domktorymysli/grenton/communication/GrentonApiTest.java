@@ -23,17 +23,10 @@ public class GrentonApiTest extends TestCase {
         when(encoder.encode(any(MessageDecoded.class))).thenReturn(new MessageEncoded("test".getBytes(), 20));
         when(encoder.decode(any(MessageEncoded.class))).thenReturn(new MessageDecoded("resp:192.168.2.200:00003da7:{\"t1\":21.600000,\"t2\":21.600000}"));
 
-        DatagramSocket datagramSocket = mock(DatagramSocket.class);
-
-        GrentonApi grentonApi = new GrentonApi(clu, encoder,  datagramSocket);
+        GrentonApi grentonApi = new GrentonApi(clu, encoder);
         CluRawCommand cluRawCommand = new CluRawCommand("req:192.168.1.104:001524:test(nil)");
 
         CluCommandResponse response = grentonApi.send(cluRawCommand);
-
-        verify(datagramSocket, times(1)).setSoTimeout(2000);
-        verify(datagramSocket, times(1)).send(any(DatagramPacket.class));
-        verify(datagramSocket, times(1)).receive(any(DatagramPacket.class));
-        verify(datagramSocket, times(1)).close();
 
         Assert.assertEquals("{\"t1\":21.600000,\"t2\":21.600000}", response.getBody());
     }

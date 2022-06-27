@@ -19,6 +19,12 @@ public final class CluFunctionCommand extends CluCommandBase implements CluComma
 
         this.command = "req:" + ip.getHostAddress() + ":" + this.sessionId + ":" + functionName + "(" + arguments + ")";
     }
+    
+    public CluFunctionCommand(InetAddress ip, String function) {
+        this.sessionId = this.generateRandomSessionId();
+
+        this.command = "req:" + ip.getHostAddress() + ":" + this.sessionId + ":" + function;
+    }
 
     private String generateRandomSessionId() {
         final StringBuilder randomSessionId = new StringBuilder(Integer.toHexString(randomGenerator.nextInt(65534)));
